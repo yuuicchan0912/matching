@@ -24,6 +24,11 @@
             :type="showPassword ? 'text' : 'password'"
             @click:append="showPassword = !showPassword"
           />
+          <v-file-input
+            accept="image/png, image/jpeg"
+            append-icon="mdi-file"
+            placeholder="ファイルをアップロード"
+          />
           <v-btn
             class="info"
             @click="signUp"
