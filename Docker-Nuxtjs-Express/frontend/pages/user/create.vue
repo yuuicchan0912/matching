@@ -6,35 +6,61 @@
       </v-card-title>
       <v-card-text>
         <v-form>
-          <v-text-field
-            v-model="userName"
-            prepend-icon="mdi-account-circle"
-            label="ユーザー名"
-          />
-          <v-text-field
-            v-model="email"
-            prepend-icon="mdi-email-outline"
-            label="メールアドレス"
-          />
-          <v-text-field
-            v-model="password"
-            prepend-icon="mdi-lock"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            label="パスワード"
-            :type="showPassword ? 'text' : 'password'"
-            @click:append="showPassword = !showPassword"
-          />
-          <v-file-input
-            accept="image/png, image/jpeg"
-            append-icon="mdi-file"
-            placeholder="ファイルをアップロード"
-          />
-          <v-btn
-            class="info"
-            @click="signUp"
-          >
-            登録する
-          </v-btn>
+          <validation-observer v-slot="observerProps">
+            <validation-provider name="ユーザー名" rules="required">
+              <div slot-scope="providerProps">
+                <v-text-field
+                  v-model="userName"
+                  prepend-icon="mdi-account-circle"
+                  label="ユーザー名"
+                />
+                <v-messages :value="providerProps.errors" color="red" />
+              </div>
+            </validation-provider>
+            <validation-provider name="メールアドレス" rules="required|email">
+              <div slot-scope="providerProps">
+                <v-text-field
+                  v-model="email"
+                  prepend-icon="mdi-email-outline"
+                  label="メールアドレス"
+                />
+                <v-messages :value="providerProps.errors" color="red" />
+              </div>
+            </validation-provider>
+            <validation-provider name="パスワード" rules="required">
+              <div slot-scope="providerProps">
+                <v-text-field
+                  v-model="password"
+                  prepend-icon="mdi-lock"
+                  :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  label="パスワード"
+                  :type="showPassword ? 'text' : 'password'"
+                  @click:append="showPassword = !showPassword"
+                />
+                <v-messages :value="providerProps.errors" color="red" />
+              </div>
+            </validation-provider>
+            <validation-provider name="画像ファイル" rules="required">
+              <div slot-scope="providerProps">
+                <v-file-input
+                  v-model="file"
+                  accept="image/png, image/jpeg"
+                  append-icon="mdi-file"
+                  placeholder="ファイルをアップロード"
+                />
+                <v-messages :value="providerProps.errors" color="red" />
+              </div>
+            </validation-provider>
+            <v-card-actions>
+              <v-btn
+                class="info"
+                :disabled="observerProps.invalid || !observerProps.validated"
+                @click="signUp"
+              >
+                登録する
+              </v-btn>
+            </v-card-actions>
+          </validation-observer>
         </v-form>
       </v-card-text>
     </v-card>
